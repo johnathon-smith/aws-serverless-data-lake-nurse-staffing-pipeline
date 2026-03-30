@@ -2,15 +2,65 @@
 
 ## Overview
 
-This project implements a fully serverless, end-to-end data pipeline on AWS that ingests healthcare staffing data from Google Drive, processes it through a structured data lake architecture, enforces data quality rules, and exposes curated datasets for analytics.
+This project implements a fully serverless, end-to-end data pipeline on AWS that ingests real-world healthcare staffing data from Google Drive, processes it through a structured multi-layer data lake, enforces data quality rules, and exposes analytics-ready datasets for querying and visualization.
 
-The pipeline is designed to be:
+Unlike simple ETL projects, this pipeline is designed to reflect real production systems, with a strong focus on reliability, traceability, and data integrity.
 
-- Scalable
-- Resilient
-- Observable
-- Cost-efficient
-- Production-ready
+Key capabilities include:
+
+- Automated ingestion of large external datasets (~214 MB) using AWS Lambda
+- Structured data lake architecture (raw → refined → validation → curated)
+- Explicit schema enforcement and data standardization
+- Data quality validation with quarantine handling
+- Partitioned Parquet datasets for efficient querying
+- End-to-end orchestration using AWS Step Functions
+- Monitoring, alerting, and failure recovery using CloudWatch, SNS, and SQS
+
+---
+
+## Why This Project Matters
+
+In real-world data engineering, pipelines must do more than just move data — they must ensure that data is:
+
+- **Reliable** → no silent failures or partial loads  
+- **Traceable** → every dataset can be tied back to its origin  
+- **Reproducible** → reruns do not corrupt or duplicate data  
+- **Observable** → failures are detectable and debuggable  
+
+This project was designed with those principles in mind, incorporating production-grade patterns that are often missing from portfolio projects.
+
+---
+
+## Manifest-Driven Ingestion (Key Design Feature)
+
+A critical component of this pipeline is the use of **manifest files** during ingestion.
+
+After each ingestion run, the pipeline generates a manifest file that records:
+
+- File name
+- Source location
+- Ingestion timestamp
+- S3 destination path
+- Run identifier
+
+### Why Manifests Matter
+
+Manifests enable several important capabilities:
+
+#### 1. Idempotency
+The pipeline can safely rerun without duplicating or reprocessing the same files.
+
+#### 2. Traceability
+Every dataset in the data lake can be traced back to its exact ingestion event.
+
+#### 3. Debugging & Recovery
+If a downstream failure occurs, the system can identify exactly which files were processed and replay only those datasets.
+
+#### 4. Auditability
+Provides a clear audit trail of what data was ingested, when, and from where — a requirement in many real-world data systems.
+
+#### 5. Decoupled Processing
+Downstream jobs (Glue, Athena, etc.) can rely on manifests instead of scanning entire S3 directories, improving performance and consistency.
 
 ---
 

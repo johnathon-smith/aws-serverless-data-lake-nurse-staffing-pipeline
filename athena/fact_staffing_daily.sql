@@ -1,0 +1,45 @@
+CREATE EXTERNAL TABLE IF NOT EXISTS nurse_staffing_db.fact_staffing_daily (
+    provnum string,
+    cy_qtr string,
+    work_date date,
+    work_day int,
+    mdscensus decimal(10,2),
+    hrs_rndon decimal(10,2),
+    hrs_rndon_emp decimal(10,2),
+    hrs_rndon_ctr decimal(10,2),
+    hrs_rnadmin decimal(10,2),
+    hrs_rnadmin_emp decimal(10,2),
+    hrs_rnadmin_ctr decimal(10,2),
+    hrs_rn decimal(10,2),
+    hrs_rn_emp decimal(10,2),
+    hrs_rn_ctr decimal(10,2),
+    hrs_lpnadmin decimal(10,2),
+    hrs_lpnadmin_emp decimal(10,2),
+    hrs_lpnadmin_ctr decimal(10,2),
+    hrs_lpn decimal(10,2),
+    hrs_lpn_emp decimal(10,2),
+    hrs_lpn_ctr decimal(10,2),
+    hrs_cna decimal(10,2),
+    hrs_cna_emp decimal(10,2),
+    hrs_cna_ctr decimal(10,2),
+    hrs_natrn decimal(10,2),
+    hrs_natrn_emp decimal(10,2),
+    hrs_natrn_ctr decimal(10,2),
+    hrs_medaide decimal(10,2),
+    hrs_medaide_emp decimal(10,2),
+    hrs_medaide_ctr decimal(10,2),
+    dataset_name string,
+    source_file_name string,
+    ingest_ts_utc timestamp,
+    provider_match_status string,
+    provider_reference_source string,
+    provider_reference_gap_flag string,
+    run_id string,
+    curated_ts_utc timestamp
+)
+PARTITIONED BY (
+    work_year int,
+    work_month int
+)
+STORED AS PARQUET
+LOCATION 's3://nurse-staffing-data-lake-bucket-001/curated/nurse_staffing/fact_staffing_daily/';
